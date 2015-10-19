@@ -1,0 +1,245 @@
+- name: loading OS variables
+  include_vars: "{{ ansible_os_family|lower }}.yml"
+  tags:
+    - apache
+
+- name: create group
+  group:
+    name={{ apache.group }}
+    state=present
+  tags:
+    - apache
+
+- name: create user
+  user:
+    name={{ apache.user }}
+    shell="/bin/false"
+    groups={{ apache.group }}
+    system=yes
+    append=no
+  tags:
+    - apache
+
+- name: install packages
+  apt:
+    pkg={{ item }}
+    state=installed
+  with_items: apache_role.packages
+  when: (ansible_os_family == "Debian")
+  tags:
+    - apache
+
+- name: install packages
+  yum:
+    pkg={{ item }}
+    state=installed
+  when: (ansible_os_family == "RedHat")
+  with_items: apache_role.packages
+  tags:
+    - apache
+
+- name: stop service
+  service:
+    name={{ apache_role.service }}
+    state=stopped
+  ignore_errors: True
+  tags:
+    - apache
+
+- name: create log directories
+  file:
+    path={{ apache_role.logdir }}/{{ item.key }}
+    mode=0755
+    owner={{ apache.user }}
+    group={{ apache.group }}
+    state=directory
+    recurse=yes
+  with_dict: stores
+  tags:
+    - apache
+
+- name: link modules directory
+  file:
+    src={{ apache_role.moddir }}/modules
+    dest={{ apache_role.path }}/modules
+    state=link
+  tags:
+    - apache
+
+- name: cleanup directories for vhosts
+  file:
+    path={{ apache_role.path }}/{{ item }}
+    state=absent
+  with_items:
+    - "html"
+    - "conf.d"
+    - "conf.modules.d"
+    - "conf-enabled"
+    - "sites-enabled"
+    - "mods-enabled"
+    - "xtra"
+  tags:
+    - apache
+
+- name: create directories for vhosts
+  file:
+    path={{ apache_role.path }}/{{ item }}
+    state=directory
+  with_items:
+    - "html"
+    - "sites-available"
+    - "sites-enabled"
+    - "mods-available"
+    - "mods-enabled"
+    - "conf-available"
+    - "conf-enabled"
+    - "xtra"
+  tags:
+    - apache
+
+- name: load virtual hosts
+  template:
+    src=sites-available/default.j2
+    dest={{ apache_role.path }}/sites-available/{{ item.key }}.conf
+  with_dict: stores
+  tags:
+    - apache
+
+- name: enable virtual hosts
+  file:
+    src={{ apache_role.path }}/sites-available/{{ item.key }}.conf
+    dest={{ apache_role.path }}/sites-enabled/{{ item.key }}.conf
+    state=link
+  with_dict: stores
+  tags:
+    - apache
+
+- name: load modules
+  template:
+    src=mods-available/{{ item }}.j2
+    dest={{ apache_role.path }}/mods-available/{{ item }}
+  with_items: apache.modules
+  tags:
+    - apache
+
+- name: enable modules
+  file:
+    src={{ apache_role.path }}/mods-available/{{ item }}
+    dest={{ apache_role.path }}/mods-enabled/{{ item }}
+    state=link
+  with_items: apache.modules
+  tags:
+    - apache
+
+- name: load modules configs
+  template:
+    src=conf-available/{{ item }}.j2
+    dest={{ apache_role.path }}/conf-available/{{ item }}
+  with_items: apache.configs
+  tags:
+    - apache
+
+- name: enable modules configs
+  file:
+    src={{ apache_role.path }}/conf-available/{{ item }}
+    dest={{ apache_role.path }}/conf-enabled/{{ item }}
+    state=link
+  with_items: apache.configs
+  tags:
+    - apache
+
+- name: load main configs
+  template:
+    src={{ item }}.j2
+    dest={{ apache_role.path }}/conf/httpd.conf
+  with_items:
+    - "apache2.conf"
+  when: (ansible_os_family == "RedHat")
+  tags:
+    - apache
+
+- name: load environment variables
+  template:
+    src={{ item }}.j2
+    dest={{ apache_role.path }}/{{ item }}
+  with_items:
+    [
+      "envvars"
+    ]
+  when: (ansible_os_family == "Debian")
+  tags:
+    - apache
+
+- name: load magic
+  template:
+    src={{ item }}.j2
+    dest={{ apache_role.path }}/{{ item }}
+  with_items:
+    [
+      "magic"
+    ]
+  tags:
+    - apache
+
+- name: load main configurations
+  template:
+    src={{ item }}.j2
+    dest={{ apache_role.path }}/{{ item }}
+  with_items:
+    [
+      "apache2.conf"
+    ]
+  when: (ansible_os_family == "Debian")
+  tags:
+    - apache
+
+- name: load custom pages
+  copy:
+    src={{ item }}
+    dest={{ apache_role.path }}/html/{{ item }}
+  with_items:
+    - "401.html"
+    - "403.html"
+    - "404.html"
+    - "502.html"
+    - "50X.html"
+    - "index.html"
+  tags:
+    - apache
+
+- name: set up logrotate
+  template:
+    src=apache2.logrotate.j2
+    dest=/etc/logrotate.d/{{ apache_role.service }}
+    mode=644
+    owner=root
+    group=root
+  tags:
+    - apache
+
+- name: set permissions on /var/lock/apache2
+  file:
+    path=/var/lock/apache2
+    state=directory
+    recurse=yes
+    owner={{ apache.user }}
+    group={{ apache.group }}
+    mode=755
+  when: (ansible_os_family == "Debian")
+  tags:
+    - apache
+
+- name: put into autostart
+  service:
+    name={{ apache_role.service }}
+    enabled=yes
+  tags:
+    - apache
+
+- name: restart service
+  service:
+    name={{ apache_role.service }}
+    state=restarted
+  ignore_errors: True
+  tags:
+    - apache
