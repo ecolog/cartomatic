@@ -53,8 +53,8 @@ Passwords will be saved in the 'credentials' folder.
 
 ## Credits
 
-* [@jsjant](https://github.com/jsjant), project's name.
-* Andrew Voronin for logo design.
+* [@jsjant](https://github.com/jsjant) for project's name.
+* [@UlyanovskUI](https://twitter.com/UlyanovskUI) for logo design.
 * Tatiana Durnova for the help with translation.
 
 ## License
