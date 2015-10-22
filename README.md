@@ -8,11 +8,11 @@ Cartomatic helps you setup server for CS-Cart or Multi-Vendor 4.0+.
 
 Log in to your server as superuser (root) via SSH and execute this command:
 
-    curl -sL http://cartoma.tk/installer | bash -s -- yourdomain.ltd
+    curl -sL http://cartoma.tk/installer | bash -s -- yourdomain.tld
 
 If you don't have cURL:
 
-    wget -qO - http://cartoma.tk/installer | bash -s -- yourdomain.ltd
+    wget -qO - http://cartoma.tk/installer | bash -s -- yourdomain.tld
 
 Done. It works.
 
