@@ -1,6 +1,6 @@
 ---
 
-- name: install packages
+- name: installing packages
   yum:
     pkg={{ item }}
     state=installed
@@ -9,7 +9,7 @@
   tags:
     - firewall
 
-- name: install packages
+- name: installing packages
   apt:
     pkg={{ item }}
     state=installed
@@ -20,7 +20,7 @@
   tags:
     - firewall
 
-- name: load configuration
+- name: loading configurations
   template:
     src={{ item }}.j2
     dest={{ fail2ban_role.path }}/{{ item }}

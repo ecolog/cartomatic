@@ -1,6 +1,6 @@
 ---
 
-- name: install packages
+- name: installing packages
   yum:
     name={{ item }}
     state=latest
@@ -9,7 +9,7 @@
   tags:
     - logrotate
 
-- name: install packages
+- name: installing packages
   apt:
     name={{ item }}
     state=latest

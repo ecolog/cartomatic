@@ -1,4 +1,4 @@
-- name: install packages
+- name: installing packages
   apt:
     pkg={{ item }}
     state=latest
@@ -7,7 +7,7 @@
   tags:
     - ftp
 
-- name: install packages
+- name: installing packages
   yum:
     pkg={{ item }}
     state=latest

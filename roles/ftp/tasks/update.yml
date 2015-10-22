@@ -1,11 +1,11 @@
-- name: stop
+- name: stopping service
   service:
     name={{ vsftpd.service }}
     state=stopped
   tags:
     - ftp
 
-- name: load configurations
+- name: loading configurations
   template:
     src={{ item }}.j2
     dest={{ vsftpd.conf_path }}/{{ item }}

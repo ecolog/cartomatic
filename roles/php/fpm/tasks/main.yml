@@ -1,23 +1,23 @@
-- name: load platform variables
+- name: loading platform variables
   include_vars: "{{ ansible_os_family|lower }}.yml"
   tags:
     - php
 
-- name: install PHP (FastCGI SAPI) via apt
+- name: installing PHP (FastCGI SAPI) via apt
   apt: name={{ item }} state=latest
   with_items: php_role.fpm.packages
   when: ansible_os_family == "Debian"
   tags:
     - php
 
-- name: install PHP (FastCGI SAPI) via yum
+- name: installing PHP (FastCGI SAPI) via yum
   yum: name={{ item }} state=latest enablerepo=remi,remi-php56
   with_items: php_role.fpm.packages
   when: ansible_os_family == "RedHat"
   tags:
     - php
 
-- name: remove FPM configuration
+- name: removing FPM configuration
   file:
     path=/etc/php5/fpm/php.ini
     state=absent
@@ -26,7 +26,7 @@
   tags:
     - nginx
 
-- name: enable FPM configuration
+- name: enabling FPM configuration
   file:
     src=/etc/php.ini
     dest=/etc/php5/fpm/php.ini
@@ -35,35 +35,35 @@
   tags:
     - nginx
 
-- name: copy pool's configurations on Debian/Ubuntu
+- name: copying pool's configurations on Debian/Ubuntu
   template: src=pool.d/www.conf.j2 dest=/etc/php5/fpm/pool.d/{{ item.key }}.conf
   with_dict: php_pool
   when: ansible_os_family == "Debian"
   tags:
     - php
 
-- name: copy pool's configurations on RHEL/CentOS
+- name: copying pool's configurations on RHEL/CentOS
   template: src=pool.d/www.conf.j2 dest=/etc/php-fpm.d/{{ item.key }}.conf
   with_dict: php_pool
   when: ansible_os_family == "RedHat"
   tags:
     - php
 
-- name: create pool's groups
+- name: creating pool's groups
   group: name={{ item.value.group }} state=present system=yes
   when: item.value.group is defined
   with_dict: php_pool
   tags:
     - php
 
-- name: create pool's users
+- name: creating pool's users
   user: name={{ item.value.owner }} group={{ item.value.group }} state=present system=yes
   when: (item.value.owner is defined) and (item.value.group is defined)
   with_dict: php_pool
   tags:
     - php
 
-- name: create log directories
+- name: creating log directories
   file:
     path={{ php_role.fpm.logdir }}/{{ item.key }}
     state=directory
@@ -75,7 +75,7 @@
   tags:
     - php
 
-- name: restart PHP-FPM
+- name: restarting PHP-FPM
   command: service {{ php_role.fpm.service }} restart
   tags:
     - php

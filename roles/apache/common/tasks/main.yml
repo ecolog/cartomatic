@@ -3,14 +3,14 @@
   tags:
     - apache
 
-- name: create group
+- name: creating group
   group:
     name={{ apache.group }}
     state=present
   tags:
     - apache
 
-- name: create user
+- name: creating user
   user:
     name={{ apache.user }}
     shell="/bin/false"
@@ -20,7 +20,7 @@
   tags:
     - apache
 
-- name: install packages
+- name: installing packages
   apt:
     pkg={{ item }}
     state=installed
@@ -29,7 +29,7 @@
   tags:
     - apache
 
-- name: install packages
+- name: installing packages
   yum:
     pkg={{ item }}
     state=installed
@@ -38,7 +38,7 @@
   tags:
     - apache
 
-- name: stop service
+- name: stopping service
   service:
     name={{ apache_role.service }}
     state=stopped
@@ -46,7 +46,7 @@
   tags:
     - apache
 
-- name: create log directories
+- name: creating log directories
   file:
     path={{ apache_role.logdir }}/{{ item.key }}
     mode=0755
@@ -58,7 +58,7 @@
   tags:
     - apache
 
-- name: link modules directory
+- name: linking modules directory
   file:
     src={{ apache_role.moddir }}/modules
     dest={{ apache_role.path }}/modules
@@ -66,7 +66,7 @@
   tags:
     - apache
 
-- name: cleanup directories for vhosts
+- name: cleaning directories for virtual hosts
   file:
     path={{ apache_role.path }}/{{ item }}
     state=absent
@@ -81,7 +81,7 @@
   tags:
     - apache
 
-- name: create directories for vhosts
+- name: creating directories for vhosts
   file:
     path={{ apache_role.path }}/{{ item }}
     state=directory
@@ -97,7 +97,7 @@
   tags:
     - apache
 
-- name: load virtual hosts
+- name: loading virtual hosts
   template:
     src=sites-available/default.j2
     dest={{ apache_role.path }}/sites-available/{{ item.key }}.conf
@@ -105,7 +105,7 @@
   tags:
     - apache
 
-- name: enable virtual hosts
+- name: enabling virtual hosts
   file:
     src={{ apache_role.path }}/sites-available/{{ item.key }}.conf
     dest={{ apache_role.path }}/sites-enabled/{{ item.key }}.conf
@@ -114,7 +114,7 @@
   tags:
     - apache
 
-- name: load modules
+- name: loading modules
   template:
     src=mods-available/{{ item }}.j2
     dest={{ apache_role.path }}/mods-available/{{ item }}
@@ -122,7 +122,7 @@
   tags:
     - apache
 
-- name: enable modules
+- name: enabling modules
   file:
     src={{ apache_role.path }}/mods-available/{{ item }}
     dest={{ apache_role.path }}/mods-enabled/{{ item }}
@@ -131,7 +131,7 @@
   tags:
     - apache
 
-- name: load modules configs
+- name: loading modules configs
   template:
     src=conf-available/{{ item }}.j2
     dest={{ apache_role.path }}/conf-available/{{ item }}
@@ -139,7 +139,7 @@
   tags:
     - apache
 
-- name: enable modules configs
+- name: enabling modules configs
   file:
     src={{ apache_role.path }}/conf-available/{{ item }}
     dest={{ apache_role.path }}/conf-enabled/{{ item }}
@@ -148,7 +148,7 @@
   tags:
     - apache
 
-- name: load main configs
+- name: loading main configs
   template:
     src={{ item }}.j2
     dest={{ apache_role.path }}/conf/httpd.conf
@@ -158,7 +158,7 @@
   tags:
     - apache
 
-- name: load environment variables
+- name: loading environment variables
   template:
     src={{ item }}.j2
     dest={{ apache_role.path }}/{{ item }}
@@ -170,7 +170,7 @@
   tags:
     - apache
 
-- name: load magic
+- name: loading magic
   template:
     src={{ item }}.j2
     dest={{ apache_role.path }}/{{ item }}
@@ -181,7 +181,7 @@
   tags:
     - apache
 
-- name: load main configurations
+- name: loading main configurations
   template:
     src={{ item }}.j2
     dest={{ apache_role.path }}/{{ item }}
@@ -193,7 +193,7 @@
   tags:
     - apache
 
-- name: load custom pages
+- name: loading custom pages
   copy:
     src={{ item }}
     dest={{ apache_role.path }}/html/{{ item }}
@@ -207,7 +207,7 @@
   tags:
     - apache
 
-- name: set up logrotate
+- name: setting up logrotate
   template:
     src=apache2.logrotate.j2
     dest=/etc/logrotate.d/{{ apache_role.service }}
@@ -217,7 +217,7 @@
   tags:
     - apache
 
-- name: set permissions on /var/lock/apache2
+- name: setting permissions on /var/lock/apache2
   file:
     path=/var/lock/apache2
     state=directory
@@ -229,14 +229,14 @@
   tags:
     - apache
 
-- name: put into autostart
+- name: putting into autostart
   service:
     name={{ apache_role.service }}
     enabled=yes
   tags:
     - apache
 
-- name: restart service
+- name: restarting service
   service:
     name={{ apache_role.service }}
     state=restarted

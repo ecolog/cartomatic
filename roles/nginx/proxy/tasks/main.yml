@@ -1,4 +1,4 @@
-- name: load configs
+- name: loading configs
   template:
     src={{ item }}.j2
     dest=/etc/nginx/{{ item }}
@@ -9,7 +9,7 @@
   tags:
     - nginx
 
-- name: enable configs
+- name: enabling configs
   file:
     src=/etc/nginx/conf-available/{{ item }}
     dest=/etc/nginx/conf-enabled/{{ item }}
@@ -19,7 +19,7 @@
   tags:
     - nginx
 
-- name: load vhosts
+- name: loading vhosts
   template:
     src=sites-available/default.conf.j2
     dest=/etc/nginx/sites-available/{{ item.key }}.conf
@@ -27,7 +27,7 @@
   tags:
     - nginx
 
-- name: enable vhosts
+- name: enabling vhosts
   file:
     src=/etc/nginx/sites-available/{{ item.key }}.conf
     dest=/etc/nginx/sites-enabled/{{ item.key }}.conf
@@ -36,7 +36,7 @@
   tags:
     - nginx
 
-- name: restart service
+- name: restarting service
   command: service {{ nginx_role.service }} restart
   ignore_errors: true
   tags:

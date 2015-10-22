@@ -3,13 +3,13 @@
   tags:
     - phpmyadmin
 
-- name: check for previous installation
+- name: checking for previous installation
   stat: path={{ pma_role.path }}
   register: pma_stats
   tags:
     - phpmyadmin
 
-- name: load preseed
+- name: loading preseed
   template:
     src=preseed.j2
     dest=/root/phpmyadmin.seed
@@ -17,13 +17,13 @@
   tags:
   - phpmyadmin
 
-- name: setup preseed
+- name: setting up preseed
   command: "/usr/bin/debconf-set-selections /root/phpmyadmin.seed"
   when: (pma_stats.stat.exists == False) and (ansible_os_family == "Debian")
   tags:
     - phpmyadmin
 
-- name: install packages
+- name: installing packages
   apt:
     pkg={{ item }}
     state=latest
@@ -32,7 +32,7 @@
   tags:
     - phpmyadmin
 
-- name: install packages
+- name: installing packages
   yum:
     pkg={{ item }}
     state=latest

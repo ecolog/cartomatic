@@ -1,4 +1,4 @@
-- name: install CS-Cart
+- name: installing CS-Cart
   shell: /usr/bin/env php index.php
   args:
     chdir: "{{ stores_dir }}/{{ item.key }}/install"
@@ -8,7 +8,7 @@
     - cscart
     - deploy
 
-- name: copy local_conf.php
+- name: copying local_conf.php
   template:
     src=local_conf.php.j2
     dest={{ stores_dir }}/{{ item.key }}/local_conf.php
@@ -20,7 +20,7 @@
     - cscart
     - deploy
 
-- name: set permissions
+- name: setting permissions
   file:
     path={{ stores_dir }}/{{ item[0].key }}/{{ item[1].path }}
     mode={{ item[1].mode }}

@@ -1,6 +1,6 @@
 ---
 
-- name: Cleanup destination folder
+- name: cleaning destination folder
   file: path={{ stores_dir }}/{{ item.key }} state=absent
   when: (item.value.cart.dist is defined)
   ignore_errors: true
@@ -9,7 +9,7 @@
     - cscart
     - deploy
 
-- name: create projects directories
+- name: creating projects directories
   file:
     path={{ stores_dir }}/{{ item.key }}
     state=directory
@@ -25,7 +25,7 @@
     - cscart
     - deploy
 
-- name: copy repository and unpack archive
+- name: copying repository and unpacking archive
   unarchive: src={{ item.value.cart.dist }} dest={{ stores_dir }}/{{ item.key }} copy=no
   when: (item.value.cart.dist is defined)
   with_dict: stores

@@ -1,4 +1,4 @@
-- name: prepare configurations
+- name: preparing configurations
   fail: msg="Unable to find settings. Please, specify JSON config (-e @config/simple.json)."
   when: (stores is not defined)
 
@@ -7,7 +7,7 @@
   tags:
     - common
 
-- name: install dotdeb repository
+- name: installing dotdeb repository
   template:
     src=sources.list.d/dotdeb.list.j2
     dest=/etc/apt/sources.list.d/dotdeb.list
@@ -15,20 +15,20 @@
   tags:
     - common
 
-- name: add GPG key (dotdeb)
+- name: adding GPG key for DotDeb
   apt_key: url=http://www.dotdeb.org/dotdeb.gpg state=present
   when: ansible_distribution == "Debian"
   tags:
     - common
 
-- name: install basic components via apt
+- name: installing basic components via apt
   apt: name={{ item }} state=latest update_cache=yes
   with_items: common.packages
   when: ansible_os_family == "Debian"
   tags:
     - common
 
-- name: install EPEL and REMI repository
+- name: installing EPEL and REMI repository
   yum: name={{ item }} state=present
   with_items:
     - "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
@@ -37,7 +37,7 @@
   tags:
     - common
 
-- name: install basic components via yum
+- name: installing basic components via yum
   yum: name={{ item }} state=latest
   with_items: common.packages
   when: ansible_os_family == "RedHat"
@@ -57,7 +57,7 @@
   tags:
     - common
 
-- name: create service user
+- name: creating user for service
   user:
     name={{ service.user }}
     group={{ service.group }}
@@ -67,7 +67,7 @@
   tags:
     - common
 
-- name: create deploy user
+- name: creating user for deployment
   user:
     name={{ item.name }}
     group={{ item.group }}
@@ -82,7 +82,7 @@
   tags:
     - common
 
-- name: copy sudoers extra
+- name: copying sudoers configurations
   template:
     src=etc/sudoers.d/security.j2
     dest=/etc/sudoers.d/00-security

@@ -1,4 +1,4 @@
-- name: start
+- name: starting service
   service:
     name={{ vsftpd.service }}
     state=started

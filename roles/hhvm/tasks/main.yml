@@ -10,14 +10,14 @@
   tags:
     - hhvm
 
-- name: create system group
+- name: creating system group
   group:
     name={{ hhvm.group|default(hhvm_role.group) }}
     state=present
   tags:
     - hhvm
 
-- name: create system user
+- name: creating system user
   user:
     name={{ hhvm.owner|default(hhvm_role.owner) }}
     shell="/bin/false"
@@ -27,14 +27,14 @@
   tags:
     - hhvm
 
-- name: create logging directory
+- name: creating logging directory
   file:
     path={{ hhvm_role.logdir }}
     state=directory
   tags:
     - hhvm
 
-- name: create session directory
+- name: creating session directory
   file:
     path={{ hhvm_role.sessiondir }}
     state=directory
@@ -44,7 +44,7 @@
   tags:
     - hhvm
 
-- name: add repository
+- name: adding repository
   template:
     src=hhvm.list.j2
     dest=/etc/apt/sources.list.d
@@ -52,7 +52,7 @@
   tags:
     - hhvm
 
-- name: install packages
+- name: installing packages
   apt:
     pkg={{ item }}
     update_cache=yes
@@ -62,7 +62,7 @@
   tags:
     - hhvm
 
-- name: install FastCGI components
+- name: installing FastCGI components
   command: "/usr/share/hhvm/install_fastcgi.sh"
   ignore_errors: True
   register: hhvm_fcgi_result
@@ -70,7 +70,7 @@
   tags:
     - hhvm
 
-- name: copy service
+- name: copying init file
   template:
     src=hhvm.j2
     dest=/etc/init.d/hhvm
@@ -80,7 +80,7 @@
   tags:
     - hhvm
 
-- name: copy configurations
+- name: copying configurations
   template:
     src={{ item }}.j2
     dest=/etc/hhvm/{{ item }}
@@ -90,7 +90,7 @@
   tags:
     - hhvm
 
-- name: launch service
+- name: launching service
   command: service hhvm restart
   tags:
     - hhvm

@@ -1,4 +1,4 @@
-- name: set permission
+- name: setting permissions
   file:
     path={{ stores_dir }}
     state=directory
@@ -9,7 +9,7 @@
     - common
     - deploy
 
-- name: create project directories
+- name: creating projects directories
   file:
     path={{ stores_dir }}/{{ item.key }}
     state=directory

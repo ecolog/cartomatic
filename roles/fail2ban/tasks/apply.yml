@@ -1,11 +1,11 @@
-- name: put into autostart
+- name: putting into autostart
   service:
     name={{ fail2ban_role.service }}
     enabled=yes
   tags:
     - firewall
 
-- name: restart
+- name: restarting service
   service:
     name={{ fail2ban_role.service }}
     state=restarted
