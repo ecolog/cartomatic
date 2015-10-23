@@ -8,10 +8,6 @@ Cartomatic поможет настроить вам сервер под CS-Cart 
 
 Войдите на сервер по SSH и выполните команду под суперпользователем (root):
 
-    curl -sL http://cartoma.tk/installer | bash -s -- yourdomain.tld
-
-Если не установлен cURL:
-
     wget -qO - http://cartoma.tk/installer | bash -s -- yourdomain.tld
 
 Готово. Сервер настроен.
@@ -20,7 +16,7 @@ Cartomatic поможет настроить вам сервер под CS-Cart 
 
 Войдите на сервер по SSH и выполните команду под суперпользователем (root):
 
-    curl -sL http://cartoma.tk/preconf | bash
+    wget -qO - http://cartoma.tk/preconf | bash
 
 Перейдите в каталог с настройками и отредактируйте JSON-конфиг:
 
