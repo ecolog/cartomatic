@@ -1,5 +1,3 @@
-![alt text](https://raw.githubusercontent.com/gongled/cartomatic/master/cartomatic.png "Cartomatic Logo")
-
 ## About
 
 Cartomatic helps you setup server for CS-Cart or Multi-Vendor 4.0+.
