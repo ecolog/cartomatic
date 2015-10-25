@@ -4,6 +4,8 @@
 
 Cartomatic helps you setup server for CS-Cart or Multi-Vendor 4.0+.
 
+[![Cartomatic: how to use](https://img.youtube.com/vi/qywoXad8ZIM/0.jpg)](http://www.youtube.com/watch?v=qywoXad8ZIM)
+
 ## Quick install
 
 Log in to your server as superuser (root) via SSH and execute this command:
