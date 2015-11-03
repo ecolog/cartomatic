@@ -14,7 +14,6 @@
   roles:
     - deploy
     - apache/common
-    - pma
     - postfix
     - ftp
 
